@@ -26,4 +26,28 @@ with(anscombe, plot(x1,y1))
 abline(lm(y1 ~ x1, data = anscombe))
 ```
 
+##Chunk 1
+```{r data_import, echo=TRUE}
+library(readr)
+df <- read_csv("analgesic.csv")
 
+```
+ 
+##Chunk 2
+```{r data_summary, echo=TRUE}
+dim.data.frame(df)
+colnames(df)
+head(df)
+tail(df)
+summary(df)
+
+```
+
+##Chunk 3
+```{r data_tidy, echo=TRUE}
+library(dplyr)
+library(tidyr)
+gather(df)
+group_by(df)
+summarise(df)
+```
