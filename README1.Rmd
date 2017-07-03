@@ -1,0 +1,262 @@
+---
+title: "Assignment 1"
+author: "Brian Nkosi"
+date: "15 February 2017"
+output: md_document
+---
+
+## Hello Octocat
+I love Octocat. She's the coolest cat in town.
+![Octocat](https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/assignments/octocat.png)
+
+
+```{r quick_look, echo=TRUE}
+data("anscombe")
+dim.data.frame(anscombe)
+colnames(anscombe)
+head(anscombe)
+tail(anscombe)
+summary(anscombe)
+```
+
+```{r xy_plot, echo=FALSE, fig.height= 8, fig.width= 8, fig.align='center', dev= 'svg', fig.path= '.figures/'}
+data("anscombe")
+anscombe
+with(anscombe, plot(x1,y1))
+abline(lm(y1 ~ x1, data = anscombe))
+```
+
+##Assignment 4
+```{r data_import, echo=TRUE}
+## Analgesic
+rm("anscombe")
+library(readr)
+df <- read_csv("analgesic.csv")
+
+```
+
+```{r data_summary, echo=TRUE}
+#exploring dimensions of dataframe
+dim.data.frame(df)
+#Column names
+colnames(df)
+#The fist and last six lines
+head(df)
+tail(df)
+#statistical summary of each column
+summary(df)
+
+```
+
+```{r data_tidy, echo=TRUE}
+library(tidyr) # to tidy data
+df2 <- gather(df, methods, pain_scores, Measurement_1:Measurement_3)
+library(dplyr) # to manipulate data
+df2 %>%
+  group_by(ID) %>%
+  summarise(avg = mean(pain_scores))
+print
+
+```
+
+
+##Assignment 5
+```{r , echo=TRUE}
+
+## Chick Weights
+
+# Null hypothesis (Ho)
+# Ho = feed type has no significant effects on chick weight
+# Alternative hypothesis (H1)
+# H1 = feed type significantly affects chick weigh
+
+# If the p-value < 0.05, we reject the null hypothesis
+# for lack of confusion remove df
+rm("df")
+library(readr) # Activating readr package to read data file
+
+# read data an assign to df3
+df3 <- read.csv("chick-weights.csv")
+
+## Exploring data properties
+# dimensions of data
+dim.data.frame(df3)
+# Names of columns
+colnames(df3)
+# First and last six lines
+head(df3)
+tail(df3)
+# Statistical summary of data
+summary(df3)
+
+# Plot chick~weights data
+boxplot(df3$weight ~ df3$feed, xlab = "Feed Type", ylab = "Weight")
+
+# Testing Data Normality, and homoscedasticity
+# Normality using Shapiro.test
+shapiro.test(df3$weight)
+# p-value = 0.21, does not deviate from normality. Therefore it is normally distributed
+# Homoscedasticity using Bartlett's test
+bartlett.test(df3$weight ~ df3$feed, data = df3)
+# p-value = 0.66 greater than 0.05, asssume homoscedasticity
+# Data qualifies for use of ANOVA to test data differences
+
+
+# Statistical test
+# Assign result of ANOVA to anovaresult1
+anovaresult1 <- aov(weight ~ feed, data = df3)
+summary(anovaresult1)
+# For clean graphical presentation of significance
+par(mfrow = c(2,2))
+plot(anovaresult1)
+# Taking Pr(>F) of 5.94e-10 and plot of ANOVA results into account shows that feedtype significantly affects chick weight
+
+# Inorder to determine which of the different types of feed was most effective pairwise.t.test was implimented using "holm" method
+
+# Parwise post-hoc test
+posthoc <- pairwise.t.test(df3$weight, df3$feed,
+                p.adjust.method = 'holm',
+                paired = FALSE)
+#data shows that soybean on average has a p-value = 0.003 < than 0.05
+#eject null hypothesis thus meaning feed type positively affects chicken weights.
+```
+
+```{r , echo=TRUE}
+
+## Gastroenteritis
+
+# Null hypothesis (Ho)
+# Ho = There is no relationship between water consumption frequency and occurance of illness
+
+# Alternative hypothesis (H1)
+# H1 = There is a significant relationship between water consumption frequency and occurance of illness
+
+# If the p-value < 0.05, we reject the null hypothesis
+
+# load readr package to read gastroenteritis data
+library(readr)
+# assign read data to gastro
+gastro <- read.csv("gastroenteritis.csv")
+
+## Exploring data properties
+
+# dimensions of data
+dim.data.frame(gastro)
+
+# Names of columns
+colnames(gastro)
+
+# First and last six lines
+head(gastro)
+tail(gastro)
+
+# Statistical summary of data
+summary(gastro)
+
+# Data is categorical
+# Assumption for Chi-Squared test, data was randomly sampled, large enough sample size, data is not correlated.
+
+# Developing readable contingency table
+library(tidyr) 
+gastro_table <- xtabs(~Consumption + Outcome, data = gastro)
+library(dplyr) # Data manipulation
+gastro_plot <- barplot(gastro_table, beside = TRUE, legend.text = c("< 1 glasses/day", ">4 plasses/day", "1 to 4 glasses/day"), xlab = "Outcome", ylab = "Frequency of Consumption" , col = c("red", "orange", "yellow"), main = "Effects of water contamination")
+
+
+# Chi-squared test
+chisq.test(gastro_table, correct = FALSE)
+# X-squared = 74.925, df = 2, p-value < 2.2e-16
+
+# p-value < 0.05
+# Reject Ho and conlcude that frequency of consumption of contaminated water significantly leads to illness
+
+```
+
+``` {r, echo=TRUE}
+
+## Nausea
+
+rm(gastro)
+
+# Null Hypothesis (Ho)
+# Ho = administration of 5HT3-receptor blocker does not increase nausea intensity in breast cancer patients
+
+# Alternative hypothesis (H1)
+# H1 = Administration of 5HT3-receptor blocker increases the intensity of nausea in breast cancer patients
+
+# If the p-value < 0.05, we reject the null hypothesis
+
+# load readr package to read nausea data
+library(readr)
+# assign read data to chemo
+chemo <- read.csv("nausea.csv")
+
+## Exploring data properties
+
+# dimensions of data
+dim.data.frame(chemo)
+
+# Names of columns
+colnames(chemo)
+
+# Since data set is small raw data can be printed
+chemo
+
+# Nausea intensity scre was out of 6 and there is a value of 40 for patient 8, possible error value will cause outlier replace with 0
+
+chemo[8, 3]= 4
+chemo
+
+
+# Statistical summary of data
+summary(chemo)
+
+plot(chemo$Nausea_before~chemo$Patient, xlab = "Patients", ylab = "Nausea Intensity Score (0 to 6)", col= 'green', type = 'l', main = 'Intensity of their nausea before and after receiving a 5HT3-receptor blocker')
+par(new=TRUE)
+plot(chemo$Nausea_after~chemo$Patient, col= 'red', axes=FALSE, xlab = "Patients", ylab = "Nausea Intensity Score (0 to 6)", type = 'l')
+legend('right', c('Nausea before', 'Nausea after'), fill = c('green', 'red'))                                                                                      
+#statistical Test
+# Wilcoxon Test
+# Data is non-parametric, comparing two related sample, there were repeated measures made on the same sample.
+wilcox.test(chemo$Nausea_before, chemo$Nausea_after, paired = TRUE)
+ # p-value = 0.029 < 0.05
+Reject Null hypothesis treatment with 5HT3-receptor blocker has significant effects on nausea
+
+```
+
+## Assignment 6
+```{r, echo=TRUE}
+## Houses
+
+rm(chemo)
+
+# Null Hypothesis (Ho)
+# Ho = House prices are independant of interest rates
+
+# Alternative hypothesis (H1)
+# H1 = House prices are influenced by interest rates
+
+# If the p-value < 0.05, we reject the null hypothesis
+
+# load readr package to read housing_prices data
+
+library(readr)
+# assign read data to chemo
+houses <- read.csv("housing_prices.csv")
+
+## Exploring data properties
+
+# dimensions of data
+dim.data.frame(houses)
+
+# Names of columns
+colnames(houses)
+
+#Statistical summary of data frame
+summary(houses)
+
+# plot of houses
+plot(houses, xlab = "interest Rate (%)", ylab = "Median House prices")
+abline(lm(houses$median_house_price_USD~houses$interest_rate, data = houses), col = "blue")
+```
+
