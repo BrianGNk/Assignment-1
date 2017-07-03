@@ -219,8 +219,8 @@ legend('right', c('Nausea before', 'Nausea after'), fill = c('green', 'red'))
 # Wilcoxon Test
 # Data is non-parametric, comparing two related sample, there were repeated measures made on the same sample.
 wilcox.test(chemo$Nausea_before, chemo$Nausea_after, paired = TRUE)
- # p-value = 0.029 < 0.05
-Reject Null hypothesis treatment with 5HT3-receptor blocker has significant effects on nausea
+# p-value = 0.029 < 0.05
+# Reject Null hypothesis treatment with 5HT3receptor blocker has significant effects on nausea
 
 ```
 
