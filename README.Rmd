@@ -257,5 +257,6 @@ summary(houses)
 # plot of houses
 plot(houses, xlab = "interest Rate (%)", ylab = "Median House prices")
 abline(lm(houses$median_house_price_USD~houses$interest_rate, data = houses), col = "blue")
+
 ```
 
