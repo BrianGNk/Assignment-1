@@ -241,7 +241,7 @@ rm(chemo)
 
 library(readr)
 # assign read data to chemo
-houses <- read.csv("housing_prices.csv")
+houses <- read.csv("housing-prices.csv")
 
 ## Exploring data properties
 
@@ -251,12 +251,33 @@ dim.data.frame(houses)
 # Names of columns
 colnames(houses)
 
-#Statistical summary of data frame
+# Statistical summary of data frame
 summary(houses)
+
+# Display data set, first six values
+head(houses)
+
 
 # plot of houses
 plot(houses, xlab = "interest Rate (%)", ylab = "Median House prices")
-abline(lm(houses$median_house_price_USD~houses$interest_rate, data = houses), col = "blue")
+abline(lm(houses$median_house_price_USD~houses$interest_rate, data = houses), col = "blue", lwd = 3)
 
+# Linear regression test for reltionship between Meadian house prices and interest rate
+# Test assigned as houses_lm
+houses_lm <- lm(houses$median_house_price_USD~houses$interest_rate, data = houses)
+summary(houses_lm)
+
+#Homoskedasticity
+plot(x=houses_lm$fitted, y=houses_lm$residuals, main = "HOMOSKEDASTICITY", col = "red", lwd = 3)
+abline(h=0, col="blue", lwd = 3)
+
+# QQ Plot
+qqnorm(houses_lm$residuals)
+qqline(houses_lm$residuals)
+
+# p-value = 0.02 < 0.05
+# We can reject reject the null hypothesis and conclude that House prices are significantly influenced by interest rates. As interest rates increase house prices increase along with them
+
+#   ------ end
 ```
 
