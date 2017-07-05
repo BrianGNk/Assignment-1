@@ -173,7 +173,6 @@ chisq.test(gastro_table, correct = FALSE)
 ```
 
 ``` {r, echo=TRUE}
-
 ## Nausea
 
 rm(gastro)

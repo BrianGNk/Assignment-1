@@ -64,3 +64,127 @@ I love Octocat. She's the coolest cat in town.
     ## 11  5  5  5  8  5.68 4.74  5.73  6.89
 
 <img src=".figures/xy_plot-1.svg" style="display: block; margin: auto;" />
+
+Assignment 4
+------------
+
+    rm("anscombe")
+    library(readr)
+
+    ## Warning: package 'readr' was built under R version 3.3.3
+
+    df <- read_csv("analgesic.csv")
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   ID = col_integer(),
+    ##   Group = col_character(),
+    ##   Measurement_1 = col_integer(),
+    ##   Measurement_2 = col_integer(),
+    ##   Measurement_3 = col_integer()
+    ## )
+
+    #exploring dimensions of dataframe
+    dim.data.frame(df)
+
+    ## [1] 40  5
+
+    #Column names
+    colnames(df)
+
+    ## [1] "ID"            "Group"         "Measurement_1" "Measurement_2"
+    ## [5] "Measurement_3"
+
+    #The fist and last six lines
+    head(df)
+
+    ## # A tibble: 6 × 5
+    ##      ID     Group Measurement_1 Measurement_2 Measurement_3
+    ##   <int>     <chr>         <int>         <int>         <int>
+    ## 1     1 Analgesic            26            26            21
+    ## 2     2 Analgesic            29            26            23
+    ## 3     3 Analgesic            24            28            22
+    ## 4     4 Analgesic            25            22            24
+    ## 5     5 Analgesic            24            28            23
+    ## 6     6 Analgesic            22            23            26
+
+    tail(df)
+
+    ## # A tibble: 6 × 5
+    ##      ID   Group Measurement_1 Measurement_2 Measurement_3
+    ##   <int>   <chr>         <int>         <int>         <int>
+    ## 1    35 Placebo            17            21            15
+    ## 2    36 Placebo            19            17            15
+    ## 3    37 Placebo            14            19            13
+    ## 4    38 Placebo            17            19            13
+    ## 5    39 Placebo            11            20            18
+    ## 6    40 Placebo            15            18            12
+
+    #statistical summary of each column
+    summary(df)
+
+    ##        ID           Group           Measurement_1   Measurement_2 
+    ##  Min.   : 1.00   Length:40          Min.   :10.00   Min.   : 8.0  
+    ##  1st Qu.:10.75   Class :character   1st Qu.:17.00   1st Qu.:17.0  
+    ##  Median :20.50   Mode  :character   Median :20.00   Median :20.0  
+    ##  Mean   :20.50                      Mean   :20.12   Mean   :20.7  
+    ##  3rd Qu.:30.25                      3rd Qu.:24.00   3rd Qu.:25.0  
+    ##  Max.   :40.00                      Max.   :30.00   Max.   :32.0  
+    ##  Measurement_3  
+    ##  Min.   :12.00  
+    ##  1st Qu.:16.00  
+    ##  Median :20.50  
+    ##  Mean   :20.52  
+    ##  3rd Qu.:24.25  
+    ##  Max.   :30.00
+
+    library(tidyr) # to tidy data
+    df2 <- gather(df, methods, pain_scores, Measurement_1:Measurement_3)
+    library(dplyr) # to manipulate data
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+    df2 %>%
+      group_by(ID) %>%
+      summarise(avg = mean(pain_scores))
+
+    ## # A tibble: 40 × 2
+    ##       ID      avg
+    ##    <int>    <dbl>
+    ## 1      1 24.33333
+    ## 2      2 26.00000
+    ## 3      3 24.66667
+    ## 4      4 23.66667
+    ## 5      5 25.00000
+    ## 6      6 23.66667
+    ## 7      7 26.66667
+    ## 8      8 23.33333
+    ## 9      9 22.66667
+    ## 10    10 24.00000
+    ## # ... with 30 more rows
+
+    print
+
+    ## function (x, ...) 
+    ## UseMethod("print")
+    ## <bytecode: 0x000000001228a970>
+    ## <environment: namespace:base>
+
+Assignment 5
+------------
+
+    rm("df")
+    library(readr)
+    df3 <- read.csv("chick-weights.csv")
+    dim.data.frame(df3)
+
+    ## [1] 71  2
